@@ -20,5 +20,16 @@ return new \Phalcon\Config(array(
         'libraryDir'     => APP_PATH . '/app/library/',
         'cacheDir'       => APP_PATH . '/app/cache/',
         'baseUri'        => '/phalcon-email-queue-project/',
-    )
+    ),
+    'mail' => array(
+        'fromName' => 'Miroslav Trninic',
+        'server'   => 'miroslav.trninic@gmail.com',
+        'smtp'     => array (
+            'server'   => 'smtp.mandrillapp.com',
+            'port'     => 587,
+            'security' => 'ssl',
+            'username' => 'miroslav.trninic@gmail.com',
+            'password' => 'AzM6aILHpPW4MFw6ZY0buA'
+        )
+    ),
 ));

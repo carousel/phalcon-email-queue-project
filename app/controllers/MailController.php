@@ -12,23 +12,47 @@ class MailController extends \Phalcon\Mvc\Controller
     {
         $config = [
             'driver' 	 => 'smtp',
-            'host'	 	 => 'smtp.mandrillapp.com',
+            'host'	 	 => 'Host URL',
             'port'	 	 => 587,
-            'encryption' => '',
-            'username'   => 'miroslav.trninic@gmail.com',
-            'password'	 => 'AzM6aILHpPW4MFw6ZY0buA',
+            'encryption' => 'tls',
+            'username'   => 'no-replay@gmail.com',
+            'password'	 => 'API secret key',
 
             'from'		 => [
-                    'email' => 'miroslav.trninic@gmail.com',
-                    'name'	=> 'Miroslav Trninic'
+                    'email' => 'no-replay@gmail.com',
+                    'name'	=> 'Customer Support'
                 ]
         ];
         $mailer = new \Phalcon\Ext\Mailer\Manager($config);
-        $message = $mailer->createMessage()
-            ->to('miroslav.trninic@gmail.com', 'Hello World')
-            ->subject('Hello world!')
-            ->content('Hello world!');
-        $message->send();
+        $queue = new Phalcon\Queue\Beanstalk(
+            array(
+                'host' => '127.0.0.1',
+                'port' => '11300'
+            )
+        );
+        $queue->put(
+            array(
+                'sendEmail' => rand()
+            )
+        );
+
+
+while (($job = $queue->peekReady()) !== false) {
+
+    $to = $this->request->getPost('to');
+    $subject = $this->request->getPost('subject');
+    $content = $this->request->getPost('content');
+    $message = $mailer->createMessage()
+        ->to($to)
+        ->subject($subject)
+        ->content($content);
+    $message->send();
+
+
+    $job->delete();
+}
+
+        return $this->flash->success("Email has been put to the queue!");
         }
 
 }

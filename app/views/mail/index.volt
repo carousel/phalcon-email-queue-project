@@ -9,7 +9,7 @@
         <input type='text' name='subject' class='form-control' placeholder="enter subject">
         <br>
         <label>Message</label>
-        <textarea name='message' class='form-control' placeholder='enter message'></textarea>
+        <textarea name='content' class='form-control' placeholder='enter message'></textarea>
         <br>
         <button type='submit' class='btn btn-success pull-right'>Send Mail</button>
     </form>

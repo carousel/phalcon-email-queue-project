@@ -1,0 +1,46 @@
+<?php
+
+require __DIR__ . '../../../vendor/autoload.php';
+
+class MailController extends \Phalcon\Mvc\Controller
+{
+
+    public function indexAction()
+    {
+    }
+    public function sendAction()
+    {
+    // Connect to the queue
+$queue = new Phalcon\Queue\Beanstalk(
+    array(
+        'host' => '192.168.0.21',
+        'port' => '11300'
+    )
+);
+
+// Insert the job in the queue
+$queue->put(
+    array(
+        'processVideo' => 4871
+    )
+);
+
+while (($job = $queue->peekReady()) !== false) {
+
+    $message = $job->getBody();
+
+    var_dump($message);
+
+    $job->delete();
+}
+        //$to = $this->request->getPost('to');
+        //$this->mailer->queue('emails/email', [
+            //'test' => 'test'
+        //], function($message) use($to){
+            //$message->to($to);
+        //});
+        //return $this->flash->success("Email has been put to the queue!");
+        }
+
+}
+
